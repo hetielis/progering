@@ -278,7 +278,7 @@
             { text: "MIS ON EKRAANIL OLEV VÄIKE RUUDUKE?", hasQuestion: true, answer: "piksel", options: ["kuup", "täpp", "piksel", "bitt"], easterEgg: "balloon" },
             { text: "MILLINE NEIST ON TURVALINE PAROOL?", hasQuestion: true, answer: "p!!ksuP4rt", options: ["123456", "p!!ksuP4rt", "parool", "mina123"] },
             { text: "MILLINE NEIST POLE PROGRAMMEERIMISE KEEL?", hasQuestion: true, answer: "uss", options: ["Python", "Html", "uss", "Scratch"] },
-            { text: "MILLISE KIIRKÄSUGA SAAD ARVUTIS TEHTU TAGASI VÕTTA?", hasQuestion: true, answer: "Ctrl+Z", options: ["Ctrl+Z", "Esc", "Ei saagi", "Ctrl+C"], easterEgg: "flying" },
+            { text: "MILLISE KIIRKÄSUGA SAAD ARVUTIS SAMMU TAGASI VÕTTA?", hasQuestion: true, answer: "Ctrl+Z", options: ["Ctrl+Z", "Esc", "Ei saagi", "Ctrl+C"], easterEgg: "flying" },
             { text: "MIS ON ALGORITM?", hasQuestion: true, answer: "Juhiste jada", options: ["Rütm", "Ekraan", "Juhiste jada", "Viirus"], easterEgg: "siren" },
             { text: "MIDA EI TOHIKS TEHISINTELLEKTIGA TEHA?", hasQuestion: true, answer: "Saladusi jagada", options: ["Teksti kirjutada", "Pilti joonistada", "Koodi luua", "Saladusi jagada"], easterEgg: "stretch" },
             { text: "MULTIPLAYER TÄHENDAB, ET:", hasQuestion: true, answer: "Mängid mitmekesi", options: ["Mängid üksi", "Mängid mitmekesi", "Mängid hiljem", "Mängid internetita"], easterEgg: "elephant" },
@@ -509,7 +509,7 @@ let previousWinStates = Array(10).fill(false);
         function triggerMegaWin() {
             gameEnded = true;
             document.getElementById('mainTitle').innerText = " TÄISMÄNGU VÕIT! ";
-            document.getElementById('mainSubtitle').innerText = "Sa leidsid kõik! Bingo laud lendab kosmosesse!";
+            document.getElementById('mainSubtitle').innerText = "Sa leidsid kõik!";
             document.getElementById('bingoContainer').classList.add('rocket-launch');
             document.body.classList.add('mega-space-theme');
             document.body.classList.remove('neon-theme');
