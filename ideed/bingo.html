@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #ff4757;
+            --secondary-color: #2ed573;
+            --bg-color: #70a1ff;
+            --cell-bg: #d4edda;
+            --cell-pink: #ffdeeb;
+            --text-color: #1e5631;
+            --bg-gradient: linear-gradient(135deg, #74ebd5 0%, #9fa8da 100%);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+    font-family: 'Quicksand', 'Segoe UI', sans-serif;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 8px;
+    transition: all 0.5s ease;
+}
+
+        /* TÄISMÄNGU KOSMOSE TAUST */
+        body.mega-space-theme {
+            background: #000;
+            background-image: radial-gradient(circle, #ffffff 2px, transparent 2px);
+            background-size: 50px 50px;
+            animation: starScroll 3s linear infinite;
+        }
+        @keyframes starScroll {
+            from { background-position: 0 0; }
+            to { background-position: 0 100vh; }
+        }
+
+        /* NEOON REŽIIM */
+        body.neon-theme {
+            --primary-color: #ff00ff;
+            --secondary-color: #39ff14;
+            --bg-gradient: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            --cell-bg: #000;
+            --cell-pink: #ff00ff;
+            --text-color: #39ff14;
+            color: #fff;
+        }
+
+        /* SIREEN REŽIIM */
+        body.siren-theme { animation: sirenFlash 0.5s infinite; }
+        @keyframes sirenFlash { 0% { background: #ff4757; } 50% { background: #70a1ff; } 100% { background: #ff4757; } }
+        .siren-shake { animation: earthquake 0.3s infinite; }
+
+        h1 {
+    font-family: 'Fredoka One', cursive;
+    color: white;
+    font-size: 2.2rem;
+    text-shadow: 3px 3px 0px var(--primary-color), 6px 6px 0px rgba(0,0,0,0.1);
+    margin: 0 0 6px 0;
+    text-align: center;
+    transition: all 0.5s ease;
+    z-index: 10;
+}
+
+        body.neon-theme h1 { color: #39ff14; text-shadow: 3px 3px 0px #ff00ff, 0 0 20px #39ff14; }
+
+        p.subtitle {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    text-align: center;
+    max-width: 100%;
+    z-index: 10;
+}
+
+        .bingo-container {
+    background: white;
+    padding: 12px;
+    border-radius: 30px;
+    box-shadow: 0 20px 0px rgba(0,0,0,0.1), 0 30px 50px rgba(0,0,0,0.15);
+    border: 8px solid #fff;
+    width: min(560px, 86vw);
+    transition: transform 0.5s ease, border-color 0.5s ease, background-color 0.5s ease;
+    position: relative;
+    z-index: 5;
+}
+
+        body.neon-theme .bingo-container { background: #111; border-color: #ff00ff; box-shadow: 0 0 30px rgba(255, 0, 255, 0.4); }
+
+        .rainbow-board { animation: rainbowColors 1.5s infinite linear; }
+        @keyframes rainbowColors { 0% { background-color: #ff9ff3; border-color: #feca57; } 25% { background-color: #ff6b6b; border-color: #48dbfb; } 50% { background-color: #1dd1a1; border-color: #ff9ff3; } 75% { background-color: #48dbfb; border-color: #ff6b6b; } 100% { background-color: #ff9ff3; border-color: #feca57; } }
+
+        /* TÄISMÄNGU RAKETI START */
+        .rocket-launch {
+            animation: rocketLaunchAnim 2.5s cubic-bezier(0.5, 0, 0.2, 1) forwards !important;
+        }
+        @keyframes rocketLaunchAnim {
+            0% { transform: translateY(0) scale(1); }
+            10% { transform: translateY(5px) scale(1.02) rotate(2deg); }
+            20% { transform: translateY(-5px) scale(1.02) rotate(-2deg); }
+            30% { transform: translateY(5px) scale(1.02) rotate(2deg); }
+            40% { transform: translateY(-5px) scale(1.02) rotate(-2deg); }
+            50% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-2000px) scale(0.3); opacity: 0; }
+        }
+
+    .bingo-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+        .cell {
+    aspect-ratio: 1 / 1;
+    background-color: var(--cell-bg);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.70rem;
+    padding: 8px;
+    color: var(--text-color);
+    cursor: pointer; user-select: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 4px solid var(--secondary-color);
+    box-shadow: inset 0 -5px 0 rgba(0,0,0,0.1);
+    text-align: center; position: relative; overflow: hidden; opacity: 1; z-index: 1;
+}
+
+        body:not(.neon-theme) .cell { border-color: #b2d8b2; }
+        .cell:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .cell.selected { background-color: var(--cell-pink) !important; border-color: var(--primary-color); color: rgba(0, 0, 0, 0.2); box-shadow: inset 0 5px 0 rgba(0,0,0,0.05); }
+        body.neon-theme .cell.selected { color: rgba(255, 255, 255, 0.2); box-shadow: 0 0 15px #ff00ff; }
+
+        .cell.selected::after { content: "❌"; position: absolute; font-size: 3rem; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        /* Easter Egg animatsioonid */
+        @keyframes barrelRoll { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(0.6); } 100% { transform: rotate(360deg) scale(1); } }
+        .spin-board { animation: barrelRoll 1s ease-in-out; }
+
+        @keyframes stretchNeck { 0% { transform: scaleY(1); } 50% { transform: scaleY(1.5) scaleX(0.9); } 100% { transform: scaleY(1); } }
+        .stretch-board { animation: stretchNeck 0.8s ease-in-out; }
+
+        @keyframes earthquake { 0% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(5px, 5px) rotate(2deg); } 50% { transform: translate(-5px, -5px) rotate(-2deg); } 75% { transform: translate(-5px, 5px) rotate(1deg); } 100% { transform: translate(5px, -5px) rotate(-1deg); } }
+        .elephant-grow { transform: scale(1.8) !important; z-index: 50 !important; box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important; }
+        .balloon-fly { animation: flyAway 1.5s ease-in forwards !important; }
+        @keyframes flyAway { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-1000px) scale(0.5); opacity: 0; } }
+
+        /* TÄISMÄNGU LÕPUTEKST */
+        .mega-win-text {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            font-size: 3.5rem;
+            font-family: 'Fredoka One', cursive;
+            color: #fff;
+            text-shadow: 0 0 20px #ff00ff, 0 0 40px #39ff14, 4px 4px 0px #000;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+            width: 100%;
+        }
+        .mega-win-active {
+            animation: showMegaWin 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 2s;
+            pointer-events: auto;
+        }
+        @keyframes showMegaWin {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .restart-btn {
+    margin-top: 18px;
+    font-family: 'Fredoka One', cursive;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #26af5f;
+    display: inline-block;
+}
+        .restart-btn:active { transform: translateY(8px); box-shadow: none; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999; padding: 10px; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal { background: white; padding: 25px; border-radius: 25px; border: 6px solid var(--primary-color); width: 100%; max-width: 450px; text-align: center; transform: scale(0.8); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal h2 { font-family: 'Fredoka One', cursive; color: var(--primary-color); margin-top: 0; }
+        .modal p { font-size: 1.2rem; font-weight: 700; color: var(--text-color); margin-bottom: 20px; }
+
+        /* MUUDETUD: Valikvastuste nupud */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .option-btn {
+            font-family: 'Quicksand', sans-serif; font-weight: 700;
+            background-color: #f1f2f6; color: #2f3542;
+            border: 3px solid #ced6e0; padding: 15px 10px;
+            border-radius: 15px; font-size: 1rem;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { background-color: var(--bg-color); color: white; border-color: var(--bg-color); transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .option-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #dfe4ea; border-color: #ced6e0; }
+
+        .error-msg { color: var(--primary-color); font-weight: bold; margin-top: 10px; display: none; font-size: 1.1rem; }
+
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 80% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+
+        @media (max-width: 500px) {
+    h1 { font-size: 1.9rem; }
+    p.subtitle { font-size: 0.85rem; margin-bottom: 10px; }
+    .bingo-container { width: min(92vw, 340px); padding: 10px; }
+    .bingo-grid { gap: 6px; }
+    .cell { font-size: 0.72rem; padding: 6px; border-radius: 14px; }
+    .mega-win-text { font-size: 2.2rem; top: 60%; }
+    .options-grid { grid-template-columns: 1fr; }
+}
+    </style>
+</head>
+<body>
+
+    <h1 id="mainTitle">BINGO!</h1>
+    <p class="subtitle" id="mainSubtitle">BINGO ON KUI 4 ON REAS VÕI DIAGONAALIS</p>
+
+    <div class="bingo-container" id="bingoContainer">
+        <div class="bingo-grid" id="bingoGrid">
+            </div>
+    </div>
+
+    <div id="megaWinScreen" class="mega-win-text">
+         KÕIK LAHENDATUD!<br>OLED TUBLI!<br>
+        <button class="restart-btn" onclick="location.reload()">Mängi uuesti!</button>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2>Mõistatus! 🧠</h2>
+            <p id="modalQuestion">Küsimuse tekst siia...</p>
+
+            <div id="optionsContainer" class="options-grid"></div>
+
+            <div class="error-msg" id="errorMsg">Vale vastus! Oota <span id="timerSpan">30</span> sekundit.</div>
+        </div>
+    </div>
+
+    <script>
+        // MUUDETUD: Lisatud options massiivid iga küsimuse juurde
+        const bingoItems = [
+            { text: "RÄÄGI ÕPETAJALE, KUIDAS INTERNETIS TURVALISELT KÄIA", hasQuestion: false, easterEgg: "confetti" },
+            { text: "TEE ANGRY BIRDSI MÄNGUS 3 LEVELIT", hasQuestion: false, easterEgg: "apples" },
+            { text: "ÜTLE KOLMELE INIMESELE MIDAGI ILUSAT", hasQuestion: false },
+            { text: "MURRA KOODI MÄNGUS 1 KOOD LAHTI", hasQuestion: false, easterEgg: "neon" },
+            { text: "TEE MUUSIKAMÄNGUS 1 LAUL", hasQuestion: false },
+            { text: "TEE 1 PUSLE", hasQuestion: false },
+            { text: "TEE MIDAGI SCRATCHIS", hasQuestion: false, easterEgg: "rainbow" },
+            { text: "TEE 20 KÜKKU", hasQuestion: false, easterEgg: "spin" },
+
+            { text: "MIS ON EKRAANIL OLEV VÄIKE RUUDUKE?", hasQuestion: true, answer: "piksel", options: ["kuup", "täpp", "piksel", "bitt"], easterEgg: "balloon" },
+            { text: "MILLINE NEIST ON TURVALINE PAROOL?", hasQuestion: true, answer: "10", options: ["123456", "10", "parool", "admin123"] },
+            { text: "MILLINE NEIST POLE PROGRAMMEERIMISE KEEL?", hasQuestion: true, answer: "kass", options: ["Python", "Java", "kass", "C++"] },
+            { text: "MILLISE KIIRKÄSUGA SAAD ARVUTIS TEHTU TAGASI VÕTTA?", hasQuestion: true, answer: "tallinn", options: ["Ctrl+Z", "Esc", "tallinn", "Ctrl+C"], easterEgg: "flying" },
+            { text: "MIS ON ALGORITM?", hasQuestion: true, answer: "112", options: ["112", "Programm", "Juhiste jada", "Viirus"], easterEgg: "siren" },
+            { text: "MIDA EI SAA TEHISINTELLEKTIGA TEHA?", hasQuestion: true, answer: "kaelkirjak", options: ["Teksti kirjutada", "Pilti joonistada", "Koodi luua", "kaelkirjak"], easterEgg: "stretch" },
+            { text: "MULTIPLAYER TÄHENDAB, ET:", hasQuestion: true, answer: "elevant", options: ["Mängid üksi", "Mängid mitmekesi", "elevant", "Mängid internetita"], easterEgg: "elephant" },
+            { text: "LOE KOKKU, MITU ARVUTIT ON ARVUTIKLASSIS", hasQuestion: true, answer: "sügis", options: ["15", "sügis", "20", "25"] }
+        ];
+
+
+
+        let currentActiveCell = null;
+        let gameEnded = false;
+        let penaltyInterval = null;
+let previousWinStates = Array(10).fill(false);
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function createFruitRain() {
+            const fruits = ['🍏', '🍎', '🍐', '🍊', '🍌', '🍉'];
+            for(let i = 0; i < 30; i++) {
+                let f = document.createElement('div');
+                f.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+                f.style.position = 'fixed'; f.style.left = Math.random() * 100 + 'vw'; f.style.top = '-50px';
+                f.style.fontSize = (Math.random() * 20 + 20) + 'px'; f.style.zIndex = 9999;
+                f.style.transition = 'top 2s cubic-bezier(0.55, 0.085, 0.68, 0.53)';
+                document.body.appendChild(f);
+                setTimeout(() => f.style.top = '120vh', 50);
+                setTimeout(() => f.remove(), 2100);
+            }
+        }
+
+        function createGrid() {
+            const grid = document.getElementById('bingoGrid');
+            grid.innerHTML = '';
+            const shuffledItems = shuffle([...bingoItems]);
+
+            shuffledItems.forEach((item) => {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.innerText = item.text;
+                cell.dataset.hasQuestion = item.hasQuestion;
+
+                // Salvestame vajalikud andmed ruudule
+                if (item.hasQuestion) {
+                    cell.dataset.answer = item.answer;
+                    cell.dataset.options = JSON.stringify(item.options);
+                    cell.dataset.penaltyUntil = "0"; // Algsättena pole karistust
+                }
+
+                cell.addEventListener('click', () => {
+                    if (gameEnded) return;
+
+                    if (cell.classList.contains('selected')) {
+                        cell.classList.remove('selected');
+                        if (item.easterEgg === 'neon') document.body.classList.remove('neon-theme');
+                        return;
+                    }
+
+                    if (item.easterEgg === 'neon') document.body.classList.add('neon-theme');
+                    else if (item.easterEgg === 'spin') { const c = document.getElementById('bingoContainer'); c.classList.add('spin-board'); setTimeout(() => c.classList.remove('spin-board'), 1000); }
+                    else if (item.easterEgg === 'stretch') { const c = document.getElementById('bingoContainer'); c.classList.add('stretch-board'); setTimeout(() => c.classList.remove('stretch-board'), 800); }
+                    else if (item.easterEgg === 'rainbow') { const c = document.getElementById('bingoContainer'); c.classList.add('rainbow-board'); setTimeout(() => c.classList.remove('rainbow-board'), 2000); }
+                    else if (item.easterEgg === 'elephant') { cell.classList.add('elephant-grow'); setTimeout(() => cell.classList.remove('elephant-grow'), 1000); }
+                    else if (item.easterEgg === 'apples') createFruitRain();
+                    else if (item.easterEgg === 'confetti') { const rect = cell.getBoundingClientRect(); confetti({ particleCount: 50, spread: 60, origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight } }); }
+                    else if (item.easterEgg === 'siren') { document.body.classList.add('siren-theme'); document.getElementById('bingoContainer').classList.add('siren-shake'); setTimeout(() => { document.body.classList.remove('siren-theme'); document.getElementById('bingoContainer').classList.remove('siren-shake'); }, 2000); }
+                    else if (item.easterEgg === 'balloon' && cell.dataset.answered !== "true") { cell.classList.add('balloon-fly'); setTimeout(() => { cell.classList.remove('balloon-fly'); openModal(cell); }, 1500); return; }
+                    else if (item.easterEgg === 'flying' && !cell.dataset.isFlying && cell.dataset.answered !== "true") {
+                        cell.dataset.isFlying = 'true'; cell.style.opacity = '0';
+                        const rect = cell.getBoundingClientRect(); const clone = cell.cloneNode(true);
+                        clone.style.position = 'fixed'; clone.style.top = rect.top + 'px'; clone.style.left = rect.left + 'px'; clone.style.margin = '0'; clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px'; clone.style.opacity = '1'; clone.style.zIndex = '1000'; clone.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                        document.body.appendChild(clone); void clone.offsetWidth;
+                        clone.style.top = 'calc(100vh - ' + (rect.height + 30) + 'px)'; clone.style.left = 'calc(100vw - ' + (rect.width + 30) + 'px)'; clone.style.transform = 'scale(1.2) rotate(-15deg)'; clone.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
+                        clone.addEventListener('click', () => { openModal(cell); }); cell.cloneRef = clone; return;
+                    }
+
+                    if (cell.dataset.hasQuestion === "true" && cell.dataset.answered !== "true") {
+                        if(item.easterEgg === 'stretch' || item.easterEgg === 'elephant' || item.easterEgg === 'siren') { setTimeout(() => openModal(cell), 800); }
+                        else { openModal(cell); }
+                    } else {
+                        cell.classList.add('selected');
+                        checkBingo();
+                    }
+                });
+                grid.appendChild(cell);
+            });
+        }
+
+        // MUUDETUD: Modali loogika valikvastuste jaoks
+        function openModal(cell) {
+            currentActiveCell = cell;
+            document.getElementById('modalQuestion').innerText = cell.innerText;
+            document.getElementById('errorMsg').style.display = 'none';
+            clearInterval(penaltyInterval);
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            const options = JSON.parse(cell.dataset.options);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optionsContainer.appendChild(btn);
+            });
+
+            checkPenalty(cell);
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            clearInterval(penaltyInterval);
+        }
+
+        // MUUDETUD: Karistuse loogika
+        function checkPenalty(cell) {
+            const penaltyUntil = parseInt(cell.dataset.penaltyUntil, 10);
+            const now = Date.now();
+            if (penaltyUntil > now) {
+                startPenaltyCountdown(cell, penaltyUntil);
+            }
+        }
+
+        function startPenaltyCountdown(cell, penaltyUntil) {
+            const errorMsg = document.getElementById('errorMsg');
+            const timerSpan = document.getElementById('timerSpan');
+            errorMsg.style.display = 'block';
+
+            // Lukustame nupud
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+
+            clearInterval(penaltyInterval);
+            penaltyInterval = setInterval(() => {
+                const now = Date.now();
+                const remaining = Math.ceil((penaltyUntil - now) / 1000);
+
+                if (remaining <= 0) {
+                    clearInterval(penaltyInterval);
+                    errorMsg.style.display = 'none';
+                    if (currentActiveCell === cell) {
+                        btns.forEach(b => b.disabled = false);
+                    }
+                } else {
+                    timerSpan.innerText = remaining;
+                }
+            }, 1000);
+
+            // Kohene uuendus enne intervalli starti
+            timerSpan.innerText = Math.ceil((penaltyUntil - Date.now()) / 1000);
+        }
+
+        function checkAnswer(selectedOption) {
+            if (!currentActiveCell) return;
+
+            if (selectedOption === currentActiveCell.dataset.answer) {
+                if (currentActiveCell.cloneRef) { currentActiveCell.cloneRef.remove(); currentActiveCell.style.opacity = '1'; currentActiveCell.dataset.isFlying = ''; delete currentActiveCell.cloneRef; }
+                currentActiveCell.dataset.answered = "true"; currentActiveCell.classList.add('selected');
+                closeModal(); confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 } });
+                checkBingo(); currentActiveCell = null;
+            } else {
+                // Vale vastus! Rakendame karistuse spetsiifilisele kastile
+                const penaltyUntil = Date.now() + 30000; // 30 sek
+                currentActiveCell.dataset.penaltyUntil = penaltyUntil.toString();
+                startPenaltyCountdown(currentActiveCell, penaltyUntil);
+            }
+        }
+
+        document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
+
+        function checkBingo() {
+    if (gameEnded) return;
+
+    const cells = document.querySelectorAll('#bingoGrid .cell');
+    const allSelected = Array.from(cells).every(c => c.classList.contains('selected'));
+
+    let board = [];
+    for (let i = 0; i < 4; i++) {
+        board.push(Array.from(cells).slice(i * 4, i * 4 + 4));
+    }
+
+    const currentWinStates = [];
+
+    for (let r = 0; r < 4; r++) {
+        currentWinStates.push(board[r].every(c => c.classList.contains('selected')));
+    }
+
+    for (let c = 0; c < 4; c++) {
+        let colWin = true;
+        for (let r = 0; r < 4; r++) {
+            if (!board[r][c].classList.contains('selected')) colWin = false;
+        }
+        currentWinStates.push(colWin);
+    }
+
+    let diag1 = true;
+    let diag2 = true;
+    for (let i = 0; i < 4; i++) {
+        if (!board[i][i].classList.contains('selected')) diag1 = false;
+        if (!board[i][3 - i].classList.contains('selected')) diag2 = false;
+    }
+    currentWinStates.push(diag1);
+    currentWinStates.push(diag2);
+
+    if (allSelected) {
+        triggerMegaWin();
+        return;
+    }
+
+    const newWinHappened = currentWinStates.some((state, index) => state && !previousWinStates[index]);
+    previousWinStates = currentWinStates;
+
+    if (newWinHappened) {
+        celebrate();
+    }
+}
+
+        function celebrate() {
+            var duration = 3 * 1000; var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 7, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors: ['#ff4757', '#2ed573', '#ffa502', '#70a1ff', '#eccc68'] });
+                confetti({ particleCount: 7, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors: ['#ff4757', '#2ed573', '#ffa502', '#70a1ff', '#eccc68'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        function triggerMegaWin() {
+            gameEnded = true;
+            document.getElementById('mainTitle').innerText = " TÄISMÄNGU VÕIT! ";
+            document.getElementById('mainSubtitle').innerText = "Sa leidsid kõik! Bingo laud lendab kosmosesse!";
+            document.getElementById('bingoContainer').classList.add('rocket-launch');
+            document.body.classList.add('mega-space-theme');
+            document.body.classList.remove('neon-theme');
+            document.getElementById('megaWinScreen').classList.add('mega-win-active');
+
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                var particleCount = 50 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+            }, 250);
+        }
+
+        createGrid();
+    </script>
+</body>
+</html>
