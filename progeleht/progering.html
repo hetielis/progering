@@ -216,7 +216,7 @@
 
       // Kehtib režiimis "count". Näiteks 2 tähendab, et mängida
       // tuleb kahte ERINEVAT alguse mängu.
-      vajalikMangudeArv: 5,
+      vajalikMangudeArv: 2,
 
       // Värvid ja kujundus
       kujundus: {
@@ -260,15 +260,6 @@
           id: "tulnukas",
           nimi: "TULNUKA MÄNG",
           link: "https://www.kidlocoding.com/basic-coding/alienescape",
-          alguseMang: true,
-          aare: "#fe41d7",
-          klassikalineTyyp: "free",
-          taheHind: 0
-        },
-        {
-          id: "prugiauto",
-          nimi: "PRÜGIAUTO MÄNG",
-          link: "https://www.kidlocoding.com/sequences/garbagetruck",
           alguseMang: true,
           aare: "#fe41d7",
           klassikalineTyyp: "free",
@@ -469,7 +460,7 @@
           alustaKusimust(mang.kusimus, { tyyp: "mang", mang });
         } else if (olek.tyyp === "count") {
           teade(
-            `Mängi enne ${SEADED.vajalikMangudeArv} erinevat tunni ülesande mängu. ` +
+            `MÄNGI VÄHEMALT ${SEADED.vajalikMangudeArv} ROOSAT MÄNGU, ET TEISED AVANEKS. ` +
             `Praegu avatud: ${edenemine.mangitud.length}.`
           );
         } else {
@@ -504,8 +495,8 @@
 
       if (SEADED.reziim === "count") {
         $("notice").textContent =
-          `Mängi ${SEADED.vajalikMangudeArv} erinevat roosa äärega ` +
-          `tunni ülesande mängu. Avatud: ${edenemine.mangitud.length}/` +
+          `MÄNGI ${SEADED.vajalikMangudeArv} ERINEVAT ROOSA ÄÄREGA ` +
+          `MÄNGU. Avatud: ${edenemine.mangitud.length}/` +
           `${SEADED.vajalikMangudeArv}.`;
       } else if (SEADED.reziim === "free") {
         $("notice").textContent = "Kõik mängud on avatud.";
@@ -567,7 +558,7 @@
           SEADED.reziim === "count" &&
           edenemine.mangitud.includes(mang.id)
         ) {
-          mark = "✓ Arvestatud";
+          mark = "✓ TEHTUD";
         }
 
         if (mark) {
