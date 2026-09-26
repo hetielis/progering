@@ -337,16 +337,6 @@
           taheHind: 3
         },
         {
-          id: "klaviatuur3",
-          nimi: "KLAVIATUUR PILV",
-          link: "https://www.typinggames.zone/typegarden",
-          alguseMang: false,
-          aare: "#67bdff",
-          klassikalineTyyp: "premium",
-          klassikalineHind: 3,
-          taheHind: 3
-        },
-        {
           id: "kood",
           nimi: "KOODI MÄNG",
           link: "https://www.safekidgames.com/pin-solver/",
@@ -386,39 +376,18 @@
     };
     /* ================= ÕPETAJA SEADETE LÕPP ================= */
 
-    // Muuda seda numbrit ainult siis, kui soovid kõigi laste
-    // selles brauseris salvestatud edenemise nullida.
-    const EDENEMISE_VERSIOON = 1;
-    const SALVESTUSE_VOTI = "progering_edenemine_" + EDENEMISE_VERSIOON;
-
+    // Edenemine elab ainult selle lehe avamise ajal.
+    // Värskendamisel alustavad tähed ja mängude avamised nullist.
     const $ = id => document.getElementById(id);
-    const algneEdenemine = () => ({
+    let edenemine = {
       tahed: 0,
       mangitud: [],
       kusimusegaAvatud: [],
       tehtudUlesanded: []
-    });
-
-    let edenemine;
-    try {
-      const salvestatud = JSON.parse(localStorage.getItem(SALVESTUSE_VOTI));
-      edenemine = salvestatud && typeof salvestatud === "object"
-        ? { ...algneEdenemine(), ...salvestatud }
-        : algneEdenemine();
-    } catch {
-      edenemine = algneEdenemine();
-    }
+    };
 
     let aktiivneKusimus = null;
     let vastatud = false;
-
-    function salvesta() {
-      try {
-        localStorage.setItem(SALVESTUSE_VOTI, JSON.stringify(edenemine));
-      } catch {
-        alert("Edenemist ei saanud selles brauseris salvestada.");
-      }
-    }
 
     function avaModal(id) {
       $(id).classList.add("open");
@@ -522,7 +491,6 @@
         !edenemine.mangitud.includes(mang.id)
       ) {
         edenemine.mangitud.push(mang.id);
-        salvesta();
         kuva();
       }
     }
@@ -672,7 +640,6 @@
         edenemine.tahed += tegevus.ulesanne.tahti;
       }
 
-      salvesta();
       kuva();
 
       setTimeout(() => {
