@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Progering</title>
+  <title>PROGERING</title>
   <style>
     :root {
       --taust: #f0f8ff;
@@ -176,9 +176,9 @@
   <div class="overlay" id="messageModal">
     <div class="modal">
       <button class="close" type="button" data-close>×</button>
-      <h2>🔒 Veel lukus</h2>
+      <h2>🔒 VEEL LUKUS</h2>
       <p id="messageText"></p>
-      <button class="primary" type="button" data-close>Selge</button>
+      <button class="primary" type="button" data-close>SULGE</button>
     </div>
   </div>
 
@@ -310,6 +310,46 @@
           id: "apple",
           nimi: "ÕUNAMÄNG",
           link: "https://poki.com/en/g/grab-the-apple",
+          alguseMang: false,
+          aare: "#67bdff",
+          klassikalineTyyp: "premium",
+          klassikalineHind: 3,
+          taheHind: 3
+        },
+        {
+          id: "klaviatuur",
+          nimi: "KLAVIATUUR KONN",
+          link: "https://www.turtlediary.com/game/catching-bugs-typing.html",
+          alguseMang: false,
+          aare: "#67bdff",
+          klassikalineTyyp: "premium",
+          klassikalineHind: 3,
+          taheHind: 3
+        },
+        {
+          id: "klaviatuur2",
+          nimi: "KLAVIATUUR MULLAMUTT",
+          link: "https://www.typinggames.zone/whack-a-mole",
+          alguseMang: false,
+          aare: "#67bdff",
+          klassikalineTyyp: "premium",
+          klassikalineHind: 3,
+          taheHind: 3
+        },
+        {
+          id: "klaviatuur3",
+          nimi: "KLAVIATUUR PILV",
+          link: "https://www.typinggames.zone/typegarden",
+          alguseMang: false,
+          aare: "#67bdff",
+          klassikalineTyyp: "premium",
+          klassikalineHind: 3,
+          taheHind: 3
+        },
+        {
+          id: "kood",
+          nimi: "KOODI MÄNG",
+          link: "https://www.safekidgames.com/pin-solver/",
           alguseMang: false,
           aare: "#67bdff",
           klassikalineTyyp: "premium",
@@ -496,7 +536,7 @@
       if (SEADED.reziim === "count") {
         $("notice").textContent =
           `MÄNGI ${SEADED.vajalikMangudeArv} ERINEVAT ROOSA ÄÄREGA ` +
-          `MÄNGU. Avatud: ${edenemine.mangitud.length}/` +
+          `MÄNGU. AVATUD: ${edenemine.mangitud.length}/` +
           `${SEADED.vajalikMangudeArv}.`;
       } else if (SEADED.reziim === "free") {
         $("notice").textContent = "Kõik mängud on avatud.";
