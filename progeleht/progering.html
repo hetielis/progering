@@ -216,7 +216,7 @@
 
       // Kehtib režiimis "count". Näiteks 2 tähendab, et mängida
       // tuleb kahte ERINEVAT alguse mängu.
-      vajalikMangudeArv: 2,
+      vajalikMangudeArv: 1,
 
       // Värvid ja kujundus
       kujundus: {
@@ -248,10 +248,19 @@
       mangud: [
 
       {
+          id: "scratch",
+          nimi: "SCRATCH",
+          link: "https://scratch.mit.edu/projects/editor/?tutorial=getStarted",
+          alguseMang: true,
+          aare: "#fe41d7",
+          klassikalineTyyp: "free",
+          taheHind: 0
+        },
+        {
           id: "konnlihtne",
           nimi: "KONNA MÄNG LIHTNE",
           link: "https://hetielis.github.io/progering/loopimine/kordused_easym",
-          alguseMang: true,
+          alguseMang: false,
           aare: "#fe41d7",
           klassikalineTyyp: "free",
           taheHind: 0
@@ -260,16 +269,25 @@
           id: "kordused",
           nimi: "PALJU KORDUSTEGA MÄNGE",
           link: "https://www.kidlocoding.com/loops/",
-          alguseMang: true,
-          aare: "#fe41d7",
+          alguseMang: false,
+          aare: "#67bdff",
           klassikalineTyyp: "free",
           taheHind: 0
         },{
           id: "varvikordus",
           nimi: "VÄRVI KORDUSTEGA MÄNG",
           link: "https://www.kidlocoding.com/loops/paintthesquares",
-          alguseMang: true,
-          aare: "#fe41d7",
+          alguseMang: false,
+          aare: "#67bdff",
+          klassikalineTyyp: "free",
+          taheHind: 0
+        },
+        {
+          id: "blockcode",
+          nimi: "KOODI MÄNG",
+          link: "https://game.rodocodo.com/hour-of-code/?_gl=1*1fknfuk*_ga*Nzc4MjM5NzM4LjE3NTc3Nzk1MzU.*_ga_2SJQ2SJ602*czE3OTE3MTc3OTMkbzIkZzAkdDE3OTE3MTc3OTMkajYwJGwwJGgxNzc5NzY5NzI4",
+          alguseMang: false,
+          aare: "#67bdff",
           klassikalineTyyp: "free",
           taheHind: 0
         },
@@ -277,8 +295,8 @@
           id: "rongimäng",
           nimi: "RONGI KORDUSMÄNG",
           link: "https://www.kidlocoding.com/loops/trackbuilder",
-          alguseMang: true,
-          aare: "#fe41d7",
+          alguseMang: false,
+          aare: "#67bdff",
           klassikalineTyyp: "free",
           taheHind: 0
         },
@@ -286,8 +304,8 @@
           id: "konnraske",
           nimi: "KONNA MÄNG RASKEM",
           link: "https://hetielis.github.io/progering/loopimine/kordused",
-          alguseMang: true,
-          aare: "#fe41d7",
+          alguseMang: false,
+          aare: "#67bdff",
           klassikalineTyyp: "free",
           taheHind: 0
         },
@@ -321,15 +339,6 @@
           id: "energia",
           nimi: "ENERGIA",
           link: "https://poki.com/en/g/energy",
-          alguseMang: false,
-          aare: "#67bdff",
-          klassikalineTyyp: "free",
-          taheHind: 0
-        },
-        {
-          id: "blokimäng",
-          nimi: "PLOKI MÄNG",
-          link: "https://www.crazygames.com/game/block-champ",
           alguseMang: false,
           aare: "#67bdff",
           klassikalineTyyp: "free",
