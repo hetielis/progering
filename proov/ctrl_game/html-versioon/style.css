@@ -1,0 +1,236 @@
+/* ===== Klahvikangelane – stiilid ===== */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+
+:root {
+  --ink: #2b2d42;
+  --soft: #6b7090;
+  --line: #d8dbe8;
+  --radius: 22px;
+  --shadow: 0 10px 30px rgba(43, 45, 66, .12);
+  --c: #6d5dfc;
+  --blue: #2f6bff;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 12%, #ffe1ef 0, transparent 35%),
+    radial-gradient(circle at 92% 18%, #d6f0ff 0, transparent 40%),
+    radial-gradient(circle at 50% 105%, #e4fbd9 0, transparent 45%),
+    #fffaf2;
+}
+button { font-family: inherit; cursor: pointer; border: none; color: inherit; }
+.app { max-width: 1180px; margin: 0 auto; padding: 22px 20px 80px; }
+
+/* ---------- Maskott (arvutihiir) ---------- */
+.mascot { width: 70px; height: 84px; flex: none; }
+.mascot .eyes { transform-origin: 50px 70px; animation: blink 4s infinite; }
+.mascot.jump { animation: jump .6s; }
+.mascot-big .mascot { width: 110px; height: 132px; animation: bob 2.6s ease-in-out infinite; }
+
+/* ---------- Avaleht ---------- */
+.home-head { text-align: center; margin: 6px 0 34px; }
+.logo { font-size: clamp(40px, 7vw, 68px); font-weight: 700; margin: 6px 0 0; line-height: 1; }
+.logo span { color: var(--c); }
+.sub { font-size: 21px; color: var(--soft); margin: 10px 0 0; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 22px; }
+.card {
+  background: #fff; border-radius: var(--radius); padding: 26px 18px 20px;
+  box-shadow: var(--shadow); text-align: center; border-bottom: 7px solid var(--c);
+  transition: transform .2s;
+}
+.card:hover { transform: translateY(-6px) rotate(-1deg); }
+.card:nth-child(even):hover { transform: translateY(-6px) rotate(1deg); }
+.card h3 { margin: 16px 0 2px; font-size: 26px; color: var(--c); }
+.card-what { color: var(--soft); font-size: 16px; min-height: 22px; }
+.card .stars { margin-top: 10px; }
+.card-speed { background: linear-gradient(135deg, #fff 0, #fff1d6 100%); }
+.speed-ic { font-size: 40px; font-weight: 700; color: var(--c); height: 66px; display: flex; align-items: center; justify-content: center; letter-spacing: 2px; }
+.foot { text-align: center; color: var(--soft); font-size: 19px; margin-top: 34px; }
+
+.stars { font-size: 26px; letter-spacing: 3px; color: #dcdfea; }
+.stars .on { color: #ffbe0b; }
+
+/* ---------- Klahvid ---------- */
+.combo { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.kc {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 66px; height: 66px; padding: 0 14px; border-radius: 14px;
+  background: #fff; border: 2px solid var(--line); box-shadow: 0 6px 0 #c3c7d9;
+  font-weight: 700; font-size: 30px;
+  transition: transform .08s, box-shadow .08s, background .15s, color .15s;
+}
+.kc.mod { font-size: 22px; }
+.kc.down { transform: translateY(5px); box-shadow: 0 1px 0 #c3c7d9; background: var(--c); color: #fff; border-color: transparent; }
+.plus { font-size: 28px; font-weight: 700; color: var(--soft); }
+.combo.small .kc { min-width: 48px; height: 48px; font-size: 22px; border-radius: 12px; box-shadow: 0 5px 0 #c3c7d9; }
+.combo.small .kc.mod { font-size: 17px; }
+
+.kbd-pair { white-space: nowrap; }
+.kbd {
+  display: inline-block; background: #fff; border: 2px solid var(--line); border-radius: 8px;
+  padding: 0 8px; margin: 0 2px; box-shadow: 0 3px 0 var(--line); font-weight: 700; font-size: .9em; line-height: 1.5;
+}
+
+/* mini-klaviatuur */
+.kb { display: inline-flex; flex-direction: column; gap: 5px; background: #eef0f7; padding: 10px; border-radius: 14px; margin-top: 16px; }
+.kb-row { display: flex; gap: 5px; }
+.kb-row:nth-child(2) { padding-left: 11px; }
+.kb-row:nth-child(3) { padding-left: 25px; }
+.k {
+  width: 22px; height: 22px; border-radius: 6px; background: #fff; font-size: 11px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; color: #a3a8bf; box-shadow: 0 2px 0 #cfd3e2;
+  transition: transform .08s;
+}
+.k.hot { background: var(--c); color: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.k.wide { width: 40px; }
+.k.space { width: 118px; }
+.k.down { transform: translateY(2px); box-shadow: none; filter: brightness(.85); }
+.kb-label { font-size: 15px; color: var(--soft); margin-top: 6px; }
+
+/* ---------- Nupud ---------- */
+.btn {
+  background: #fff; border-radius: 999px; padding: 11px 20px; font-size: 18px; font-weight: 600;
+  box-shadow: 0 4px 0 var(--line); transition: transform .08s, box-shadow .08s;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.btn.primary { background: var(--c); color: #fff; box-shadow: 0 4px 0 rgba(0,0,0,.22); }
+
+/* ---------- Õppetund ---------- */
+.topbar { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.topbar .title { font-size: 24px; font-weight: 600; flex: 1; }
+.topbar .stars { font-size: 32px; }
+
+.lesson { display: grid; grid-template-columns: 290px 1fr; gap: 22px; align-items: start; }
+@media (max-width: 900px) { .lesson { grid-template-columns: 1fr; } }
+
+.side { background: #fff; border-radius: var(--radius); padding: 24px 18px; box-shadow: var(--shadow); text-align: center; border-top: 8px solid var(--c); }
+.side h2 { margin: 18px 0 4px; font-size: 32px; color: var(--c); }
+.what { margin: 0 0 6px; font-size: 18px; color: var(--soft); }
+.demo-btn { margin-top: 18px; width: 100%; font-size: 19px; }
+
+.talk { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; min-height: 90px; }
+.bubble {
+  position: relative; flex: 1; background: #fff; border-radius: 20px; padding: 14px 20px;
+  font-size: 21px; font-weight: 500; box-shadow: var(--shadow); line-height: 1.55; animation: pop .35s;
+}
+.bubble::before {
+  content: ''; position: absolute; left: -11px; top: 50%; margin-top: -11px;
+  border: 11px solid transparent; border-left: 0; border-right-color: #fff;
+}
+.bubble.ok { background: #dcfbe4; } .bubble.ok::before { border-right-color: #dcfbe4; }
+.bubble.hint { background: #fff4cc; } .bubble.hint::before { border-right-color: #fff4cc; }
+.bubble b { color: var(--c); }
+.blue { background: var(--blue); color: #fff; border-radius: 4px; padding: 0 4px; }
+
+/* ---------- „Arvuti töölaud“ ja aknad ---------- */
+.desk {
+  background: linear-gradient(135deg, #dde7ff 0, #efe4ff 100%);
+  border-radius: var(--radius); padding: 22px; display: grid; gap: 20px;
+  grid-template-columns: repeat(var(--n, 1), 1fr); position: relative;
+}
+@media (max-width: 700px) { .desk { grid-template-columns: 1fr; } }
+.demo-on .desk { pointer-events: none; outline: 4px dashed color-mix(in srgb, var(--c) 50%, transparent); outline-offset: 4px; }
+
+.win {
+  background: #fff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 14px 30px rgba(30, 40, 90, .18); position: relative; transition: box-shadow .2s;
+}
+.win:focus-within { box-shadow: 0 0 0 3px var(--c), 0 14px 30px rgba(30, 40, 90, .18); }
+.win-bar {
+  display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: #f1f3f9;
+  border-bottom: 1px solid #e2e5ef; font-size: 15px; font-weight: 600; color: #555b77;
+}
+.dots { display: flex; gap: 6px; }
+.dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+.dots i:nth-child(1) { background: #ff5f57; } .dots i:nth-child(2) { background: #febc2e; } .dots i:nth-child(3) { background: #28c840; }
+.lock { margin-left: auto; font-size: 12px; color: #9aa0b8; font-weight: 500; }
+.ta {
+  border: none; outline: none; resize: none; padding: 16px 20px; flex: 1; min-height: 230px; width: 100%;
+  font: 500 21px/1.6 'Fredoka', system-ui, sans-serif; color: #1f2235; background: #fff;
+}
+.ta[readonly] { background: #fbfbfe; }
+.ta::selection { background: var(--blue); color: #fff; }
+.win.pulse { animation: pulse .6s; }
+
+.cat-walk { position: absolute; bottom: 14px; left: -70px; font-size: 54px; pointer-events: none; z-index: 3; animation: walk 1.7s linear forwards; }
+
+/* mälu riba */
+.clipbar {
+  display: flex; align-items: center; gap: 12px; margin-top: 16px; background: #fff; border-radius: 16px;
+  padding: 10px 16px; box-shadow: var(--shadow); border: 2px dashed var(--c);
+}
+.clip-lbl { font-weight: 600; color: var(--soft); white-space: nowrap; }
+.clip-chip {
+  background: color-mix(in srgb, var(--c) 14%, white); border-radius: 10px; padding: 4px 12px; font-weight: 600;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 19px;
+}
+.clip-chip.empty { background: #f2f3f8; color: #a8adc4; font-weight: 500; }
+.clip-note { margin-left: auto; color: #a8adc4; font-size: 14px; white-space: nowrap; }
+
+/* otsimine (dokument) */
+.findbar {
+  display: none; gap: 8px; align-items: center; padding: 8px 12px; background: #fff8e1;
+  border-bottom: 2px solid var(--c); animation: slide .25s;
+}
+.findbar.open { display: flex; }
+.find-in { flex: 1; min-width: 0; font: inherit; font-size: 19px; border: 2px solid #e8dcae; border-radius: 8px; padding: 4px 10px; outline: none; }
+.find-in:focus { border-color: var(--c); }
+.find-count { font-weight: 600; color: var(--soft); min-width: 48px; text-align: center; }
+.fbtn { background: #fff; border: 2px solid #e8dcae; border-radius: 8px; width: 34px; height: 34px; font-size: 14px; }
+.doc { height: 320px; overflow: auto; padding: 16px 24px; font-size: 20px; line-height: 1.7; position: relative; }
+.doc p { margin: 0 0 12px; }
+mark { background: #ffe066; border-radius: 4px; padding: 0 2px; }
+mark.cur { background: #ff9f1c; color: #fff; }
+
+.quiz { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: center; margin-top: 18px; }
+.ans { font-size: 21px; padding: 12px 26px; }
+
+/* ---------- Kiirmäng ---------- */
+.speed { max-width: 560px; margin: 10px auto 0; text-align: center; }
+.bar { height: 16px; background: #eceef6; border-radius: 999px; overflow: hidden; }
+.bar div { height: 100%; background: linear-gradient(90deg, #6d5dfc, #ff5d8f); border-radius: 999px; transition: width .3s; }
+.prompt { background: #fff; border-radius: 28px; box-shadow: var(--shadow); padding: 46px 20px 30px; margin-top: 26px; border-bottom: 8px solid var(--c); }
+.p-name { font-size: 56px; font-weight: 700; color: var(--c); }
+.p-hint { min-height: 40px; margin-top: 14px; font-size: 22px; }
+.p-q { color: var(--soft); font-size: 19px; margin-top: 16px; }
+
+/* ---------- Võiduaken ---------- */
+.overlay {
+  position: fixed; inset: 0; background: rgba(43,45,66,.45); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center; z-index: 50; padding: 20px;
+}
+.win-box { background: #fff; border-radius: 30px; padding: 30px 38px; text-align: center; animation: pop .45s; max-width: 460px; width: 100%; }
+.win-box h2 { font-size: 46px; margin: 4px 0 16px; color: var(--c); }
+.win-box p { color: var(--soft); font-size: 19px; }
+.win-box .stars { font-size: 52px; letter-spacing: 8px; }
+.win-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+
+.confetti { position: fixed; top: -20px; width: 10px; height: 16px; z-index: 60; border-radius: 3px; pointer-events: none; animation: fall linear forwards; }
+
+.echo {
+  position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); background: var(--ink); color: #fff;
+  padding: 10px 22px; border-radius: 999px; font-size: 22px; font-weight: 600; opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s; z-index: 45;
+}
+.echo.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Animatsioonid ---------- */
+.pop { animation: pop .4s both; }
+.shake { animation: shake .4s; }
+@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+@keyframes jump { 0%,100% { transform: translateY(0) rotate(0) } 40% { transform: translateY(-22px) rotate(-8deg) } 70% { transform: translateY(0) rotate(5deg) } }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1) } 95% { transform: scaleY(.1) } }
+@keyframes pop { 0% { transform: scale(.5); opacity: 0 } 70% { transform: scale(1.08); opacity: 1 } 100% { transform: scale(1) } }
+@keyframes shake { 0%,100% { transform: translateX(0) } 20%,60% { transform: translateX(-12px) } 40%,80% { transform: translateX(12px) } }
+@keyframes slide { from { transform: translateY(-10px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes pulse { 50% { transform: scale(1.02) } }
+@keyframes walk { to { left: calc(100% + 20px) } }
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
